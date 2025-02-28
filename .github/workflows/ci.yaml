@@ -1,18 +1,24 @@
-name: Always Pass CI
+# .github/workflows/ci.yaml
+name: CI
 
 on:
-  # Trigger on pushes to "main" and pull requests targeting "main"
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  always-pass:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-        
-      - name: Always pass
-        run: echo "All tests pass!"
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: pytest
